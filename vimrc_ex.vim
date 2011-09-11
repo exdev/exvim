@@ -49,19 +49,19 @@ nnoremap <unique> <Leader>bd :call exUtility#Kwbd(1)<CR>
 " quick highlight
 " NOTE: only gui mode can have alt, in terminal we have to use other mapping
 if has("gui_running") " gui mode
-    " if has ("mac")
-    "     nnoremap <unique> <silent> ¡ :call exUtility#Highlight_Normal(1)<CR>
-    "     nnoremap <unique> <silent> ™ :call exUtility#Highlight_Normal(2)<CR>
-    "     nnoremap <unique> <silent> £ :call exUtility#Highlight_Normal(3)<CR>
-    "     nnoremap <unique> <silent> ¢ :call exUtility#Highlight_Normal(4)<CR>
+    if has ("mac")
+        nnoremap <unique> <silent> ¡ :call exUtility#Highlight_Normal(1)<CR>
+        nnoremap <unique> <silent> ™ :call exUtility#Highlight_Normal(2)<CR>
+        nnoremap <unique> <silent> £ :call exUtility#Highlight_Normal(3)<CR>
+        nnoremap <unique> <silent> ¢ :call exUtility#Highlight_Normal(4)<CR>
 
-    "     vnoremap <unique> <silent> ¡ :call exUtility#Highlight_Visual(1)<CR>
-    "     vnoremap <unique> <silent> ™ :call exUtility#Highlight_Visual(2)<CR>
-    "     vnoremap <unique> <silent> £ :call exUtility#Highlight_Visual(3)<CR>
-    "     vnoremap <unique> <silent> ¢ :call exUtility#Highlight_Visual(4)<CR>
+        vnoremap <unique> <silent> ¡ :call exUtility#Highlight_Visual(1)<CR>
+        vnoremap <unique> <silent> ™ :call exUtility#Highlight_Visual(2)<CR>
+        vnoremap <unique> <silent> £ :call exUtility#Highlight_Visual(3)<CR>
+        vnoremap <unique> <silent> ¢ :call exUtility#Highlight_Visual(4)<CR>
 
-    "     nnoremap <unique> <silent> º :call exUtility#HighlightCancle(0)<CR>
-    " else
+        nnoremap <unique> <silent> º :call exUtility#HighlightCancle(0)<CR>
+    else
         nnoremap <unique> <silent> <M-1> :call exUtility#Highlight_Normal(1)<CR>
         nnoremap <unique> <silent> <M-2> :call exUtility#Highlight_Normal(2)<CR>
         nnoremap <unique> <silent> <M-3> :call exUtility#Highlight_Normal(3)<CR>
@@ -73,7 +73,7 @@ if has("gui_running") " gui mode
         vnoremap <unique> <silent> <M-4> :call exUtility#Highlight_Visual(4)<CR>
 
         nnoremap <unique> <silent> <M-0> :call exUtility#HighlightCancle(0)<CR>
-    " endif
+    endif
 else " terminal mode
     nnoremap <unique> <silent> <leader>h1 :call exUtility#Highlight_Normal(1)<CR>
     nnoremap <unique> <silent> <leader>h2 :call exUtility#Highlight_Normal(2)<CR>
@@ -116,7 +116,7 @@ let g:ex_comment_lable_keyword .= 'ERROR DEBUG CRASH DUMMY UNUSED TESTME ' " for
 let g:ex_comment_lable_keyword .= 'FIXME BUG HACK OPTME HARDCODE REFACTORING DUPLICATE REDUNDANCY PATCH ' " for refactoring
 
 " register buffer names of plugins.
-let g:ex_plugin_registered_bufnames = ["-MiniBufExplorer-","__Tag_List__","\[Lookup File\]", "\[BufExplorer\]"] 
+let g:ex_plugin_registered_bufnames = ["__Tagbar__", "-MiniBufExplorer-","__Tag_List__","\[Lookup File\]", "\[BufExplorer\]"] 
 
 " register filetypes of plugins.
 let g:ex_plugin_registered_filetypes = ["ex_plugin","ex_project","taglist","nerdtree"] 
@@ -189,11 +189,11 @@ nnoremap <unique> <silent> <Leader>sq :ExslQuickViewToggle<CR>
 nnoremap <unique> <silent> <Leader>sg :ExslGoDirectly<CR>
 let g:exSL_SymbolSelectCmd = 'TS'
 if has("gui_running") "  the <alt> key is only available in gui mode.
-    " if has ("mac")
-    "     nmap <unique> Ò :ExslQuickSearch<CR>/
-    " else
+    if has ("mac")
+        nmap <unique> Ò :ExslQuickSearch<CR>/
+    else
         nmap <unique> <M-L> :ExslQuickSearch<CR>/
-    " endif
+    endif
 endif
 
 " ------------------------------------------------------------------ 
@@ -257,24 +257,27 @@ nnoremap <unique> <silent> <Leader>ad :ExmhHL 0 <CR>
 " ------------------------------------------------------------------ 
 
 if has("gui_running") "  the <alt> key is only available in gui mode.
-    " if has ("mac")
-    "     nmap <unique> Ø :EXProject<CR>:redraw<CR>/
-    "     nnoremap <unique> <silent> ∏ :EXProject<CR>
-    " else
+    if has ("mac")
+        nmap <unique> Ø :EXProject<CR>:redraw<CR>/
+        nnoremap <unique> <silent> ∏ :EXProject<CR>
+    else
         nmap <unique> <M-O> :EXProject<CR>:redraw<CR>/
         nnoremap <unique> <silent> <M-P> :EXProject<CR>
-    " endif
+    endif
 endif
 
 nnoremap <silent> <F5> :ExpjSelectToggle<CR>
 nnoremap <silent> <leader><F5> :ExpjGotoCurrentFile<CR>
 nnoremap <unique> <leader>ff :EXProject<CR>:redraw<CR>/\[\l*\]\zs.*
 nnoremap <unique> <leader>fd :EXProject<CR>:redraw<CR>/\[\u\]\zs.*
-nnoremap <unique> <leader>fc :ExpjGotoCurrentFile<CR>
+" nnoremap <unique> <leader>fc :ExpjGotoCurrentFile<CR>
+" let g:exPJ_window_width_increment = 50
+" let g:exPJ_backto_editbuf = 1
+" let g:exPJ_close_when_selected = 0
+" let g:exPJ_window_width = 30
+
 let g:exPJ_window_width_increment = 50
-let g:exPJ_backto_editbuf = 1
 let g:exPJ_close_when_selected = 0
-let g:exPJ_window_width = 30
 
 
 " ------------------------------------------------------------------ 
@@ -331,7 +334,9 @@ function g:exES_PostUpdate()
         let g:LookupFile_TagExpr='"'.g:exES_LookupFileTag.'"'
         if exists(':LUCurFile')
             " NOTE: the second <CR>, if only one file, will jump to it directly.
-            unmap gf
+            if maparg("gf")
+                unmap gf
+            endif
             nnoremap <unique> <silent> gf :LUCurFile<CR>
         endif
     endif

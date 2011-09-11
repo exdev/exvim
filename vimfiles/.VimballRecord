@@ -1,1 +1,2 @@
 visincr.vba: call delete('D:\exDev\Vim\vimfiles/plugin/visincrPlugin.vim')|call delete('D:\exDev\Vim\vimfiles/autoload/visincr.vim')|call delete('D:\exDev\Vim\vimfiles/doc/visincr.txt')|call delete('D:\exDev\Vim\vimfiles/autoload/calutil.vim')
+tagbar.vba: call delete('/Users/yujianrong/exVim/vimfiles//plugin/tagbar.vim')|call delete('/Users/yujianrong/exVim/vimfiles//syntax/tagbar.vim')|call delete('/Users/yujianrong/exVim/vimfiles//doc/tagbar.txt')

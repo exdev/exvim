@@ -1,46 +1,26 @@
 " General vim rc, for the general settings include common plugins
 
 " General start
+filetype on                 " enable file type detection 
 filetype plugin on
 set nocompatible
 source $VIMRUNTIME/vimrc_example.vim
 behave xterm
 
-
-set fileencodings=cp936,cp932,cp950           " clear fileencoding setting to use the setting od encoding directly
-" set fileencodings=
-
-""--------------------------------------------------------------------------------
 "" ==== Custom setting ====
 set backup                  " make backup file and leave it around 
-set backupdir=$HOME/vim/MyVimRoot/data/backup " where to put backup file 
-set directory=$HOME/vim/MyVimRoot/data/swap   " save the tmp files to temporary directory
+set backupdir=$HOME/exVim/data/backup " where to put backup file 
+set directory=$HOME/exVim/data/swap   " save the tmp files to temporary directory
 set nocompatible            " Use Vim settings, rather then Vi settings (much better!). This must be first, because it changes other options as a side effect.
 set cindent shiftwidth=4    " Set cindent on to autoinent when editing C/C++ file, with 4 shift width
 set tabstop=4               " Set tabstop to 4 characters
 set expandtab               " Set expandtab on, the tab will be change to space automaticaly
 set nowrap                  " no wrap on the end of the editor screen.
 set viminfo+=!              " make sure it can save viminfo 
-filetype on                 " enable file type detection 
-filetype plugin on          " enable loading the plugin for appropriate file type 
 set shellredir=>%s\ 2>&1    " redirection operator stderr to stdout
 set history=50              " keep 50 lines of command line history
 set updatetime=1000         " save the modification to swap file when no input and the time passed, default is 4000
 set autoread                " auto read when changed ( better for vc/vim change )
-if has("mac")               " Better font for coding
-    let &guifont="Menlo Regular:h12" 
-else
-    " if getfontname("Bitstream_Vera_Sans_Mono") != "" 
-        set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI
-    " else
-        " set guifont=Lucida_Console:h10:cANSI
-    " endif
-endif
-let g:gui_font = &guifont
-if has("gui_running")
-" if &term == "builtin-gui" || &term == "builtin_gui"
-    set lines=60 columns=180    " Better size for large screen
-endif
 set incsearch               " do incremental searching
 set ignorecase              " Set search/replace pattern to ignore case 
 set smartcase               " smartcase, If there is upper case character in the search patern, the 'ignorecase' option will be override.
@@ -59,8 +39,10 @@ set showcmd	                " display incomplete commands
 set cmdheight=1             " 1 screen lines to use for the command-line 
 set ruler                   " show the cursor position all the time
 set hidden                  " allow to change buffer without saving 
+set shortmess=atToO         " shortens messages to avoid 'press a key' prompt 
 set lazyredraw              " do not redraw while executing macros (much faster) 
 set display+=lastline       " for easy browse last line with wrap text
+set laststatus=2            " always have status-line
 set showfulltag             " show tag with function protype.
 set autoindent              " autoindent 
 set smartindent             " smartindent 
@@ -74,24 +56,41 @@ set diffopt=filler,context:9999 " do not hide the same lines
 set completeopt=menuone     " set completeopt don't show preview
 set tags+=./tags,./../tags,./**/tags,tags " which tags files CTRL-] will find 
 set makeef=error.err        " the errorfile for :make and :grep 
+set fileencodings=cp936,cp932,cp950,utf-8 "default for GB2312, sjis and BIG5
+set fileencodings=          
+set fileencoding=
 if has("mac") && has("gui_running")
   set iminsert=2
 endif 
+if has("mac")               " Better font for coding
+    let &guifont="Menlo Regular:h12" 
+else
+    " if getfontname("Bitstream_Vera_Sans_Mono") != "" 
+        set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI
+    " else
+        " set guifont=Lucida_Console:h10:cANSI
+    " endif
+endif
+let g:gui_font = &guifont
+if has("gui_running")
+    set lines=50 columns=160    " Better size for large screen
+endif
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+    syntax on
+    set hlsearch
+endif
+" only supoort in 7.3 or higher
+if v:version >= 703
+    set noacd " no autochchdir
+endif
 
 au BufEnter * :syntax sync fromstart " ensure every file does syntax highlighting (full) 
-" au GUIEnter * simalt ~x " Maximize window when enter vim
-
 au BufEnter * set formatoptions-=o   " do not copy the comment mark when use 'o' to add a new line.
 au BufEnter,BufNewFile *.vim set iskeyword+=#
 au BufEnter,BufNewFile *vimrc* set iskeyword+=#
-
-" Add highlighting for function definition in C++ 
-function! EnhanceCppSyntax()
-    syn match cppFuncDef "::\~\?\zs\h\w*\ze\ *([^)]*\()\s*\(const\)\?\)\?[^;]*$"
-    hi def link cppFuncDef Special
-endfunction
-autocmd Syntax cpp call EnhanceCppSyntax()
-
+au BufNewFile,BufRead *.avs set syntax=avs " for avs syntax file.
 au BufEnter *.py,*.pyw call CheckIfExpandTab() " if edit python scripts, check if have \t. ( python said: the programme can only use \t or not, but cannot use them together )
 function CheckIfExpandTab()
     let has_noexpandtab = search('^\t','wn')
@@ -131,6 +130,18 @@ function CheckIfExpandTab()
         " we use original vim setting
     endif
 endfunction
+
+autocmd Syntax cpp call EnhanceCppSyntax()  " Add highlighting for function definition in C++ 
+function! EnhanceCppSyntax()
+    syn match cppFuncDef "::\~\?\zs\h\w*\ze\ *([^)]*\()\s*\(const\)\?\)\?[^;]*$"
+    hi def link cppFuncDef Special
+endfunction
+
+" Disable auto-comment for c/cpp, lua, javascript, c# and vim-script
+au FileType c,cpp,javascript set comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,f:// 
+au FileType cs set comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,f:///,f:// 
+au FileType vim set comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",f:\"
+au FileType lua set comments=f:--
 
 
 ""--------------------------------------------------------------------------------
@@ -192,7 +203,6 @@ function s:Grep_Cfiles()
 endfunction
 
 
-
 ""--------------------------------------------------------------------------------
 "" ====  F-Key mappings ====
 
@@ -237,7 +247,7 @@ nmap <S-F1> :call LoopEncoding()<CR>
 " ex-utilities
 nmap <A-F1> :call setreg('/','')<CR>
 
-" F2: reserved for taglist
+" F2: reserved for tagbar
 
 " F3: map LookupFile
 nmap <unique> <silent> <A-F3> <Plug>LookupFile
@@ -280,8 +290,6 @@ imap <F12> <ESC>:call ToggleMenuToolbar()<CR>
 nmap <F12> :call ToggleMenuToolbar()<CR>
 
 
-
-
 ""--------------------------------------------------------------------------------
 "" ====  Quick Reference  ====
 function Show_exVimEasyQuickReference()
@@ -290,7 +298,7 @@ function Show_exVimEasyQuickReference()
     "     echo " * <F1> : ex-plugins 窗口在线帮助\n"
     "     echo " * <leader><F1> : 显示 exVim Easy 快捷键快速参考\n"
     "     echo " * <Alt-F1> : 清除查找寄存器 ('/' register) 以取消查找高亮\n"
-    "     echo " * <F2> : 开/关 taglist 插件窗口\n"
+    "     echo " * <F2> : 开/关 tagBar 插件窗口\n"
     "     echo " * <leader><F2> : 开/关 exMarksBrowser 插件窗口\n"
     "     echo " * <F3> : 开/关 exBufExplorer 插件窗口\n"
     "     echo " * <leader><F3> : 将当前文件加入到 exBufExplorer 的 Bookmark 中\n"
@@ -315,7 +323,7 @@ function Show_exVimEasyQuickReference()
         echo " * <F1> : Online help in ex-plugins window\n"
         echo " * <leader><F1> : Show the Quick Reference for exVim Easy\n"
         echo " * <Alt-F1> : Clear the search register to disable the search highlight\n"
-        echo " * <F2> : Toggle plugin taglist\n"
+        echo " * <F2> : Toggle plugin tagBar \n"
         echo " * <leader><F2> : Toggle exMarksBrowser Window\n"
         echo " * <F3> : Toggle exBufExplorer Window\n"
         echo " * <leader><F3> : Add the current buffer to the bookmark of exBufExplorer\n"
@@ -344,13 +352,30 @@ nmap <leader><F1> :call Show_exVimEasyQuickReference()<CR>
 
 ""--------------------------------------------------------------------------------
 "" ==== Plugin settings ====
+
+
+" --------------------
+" TagBar
+" --------------------
+" F2:  Switch on/off TagBar
+nnoremap <silent> <F2> :TagbarOpen<CR>
+" ctags find the tags file from the current path instead of the path of
+" currect file
+au BufNewFile,BufEnter * set cpoptions+=d
+let g:tagbar_autoclose = 1 "automatically close when you jump to a tag.
+let g:tagbar_autofocus = 1 "move to the Tagbar window when it is opened.
+let g:tagbar_usearrows = 0
+let g:tagbar_autoshowtag = 1
+let g:tagbar_closeWindowKey = "<F2>"
+
+
 " --------------------
 " MiniBufExpl
 " --------------------
 let g:miniBufExplTabWrap = 1 " make tabs show complete (no broken on two lines) 
 let g:miniBufExplModSelTarget = 1 " If you use other explorers like TagList you can (As of 6.2.8) put:
-"let g:miniBufExplForceSyntaxEnable = 1 " There is a VIM bug that can cause buffers to show up without their highlighting. The following setting will cause MBE to
-"let g:miniBufExplorerMoreThanOne = 1 " Setting this to 0 will cause the MBE window to be loaded even
+let g:miniBufExplUseSingleClick = 1 " If you would like to single click on tabs rather than double clicking on them to goto the selected buffer. 
+" let g:miniBufExplMaxSize = 1 " <max lines: default 0> setting this to 0 will mean the window gets as big as needed to fit all your buffers. 
 
 "for buffers that have NOT CHANGED and are NOT VISIBLE.
 hi MBENormal guibg=White
@@ -362,61 +387,28 @@ hi MBEVisibleNormal guibg=Gray
 hi MBEVisibleChanged guibg=DarkRed
 
 
-" --------------------
-" Taglist
-" --------------------
-" F2:  Switch on/off TagList
-nnoremap <silent> <F2> :Tlist<CR>
-let Tlist_Use_Right_Window = 1
-" to make Taglist work with UnrealScript
-au FileType uc let Tlist_Ctags_Cmd = 'ctags.exe --options="' . $EX_DEV . '/vim/toolkit/cTags/.ctags"'
-let tlist_uc_settings = 'uc;c:class;f:function;i:simulated;e:event;s:state;x:exec;v:var'
-
-" ctags find the tags file from the current path instead of the path of
-" currect file
-au BufNewFile,BufEnter * set cpoptions+=d
-
-let Tlist_Show_One_File = 1 " Displaying tags for only one file~
-let Tlist_Sort_Type = "order" " sort by order or name
-let Tlist_Display_Prototype = 0 " do not show prototypes and not tags in the taglist window.
-let Tlist_Compart_Format = 1 " Remove extra information and blank lines from the taglist window.
-let Tlist_GainFocus_On_ToggleOpen = 1 " Jump to taglist window on open.
-let Tlist_Display_Tag_Scope = 1 " Show tag scope next to the tag name.
-let Tlist_Close_On_Select = 1 " Close the taglist window when a file or tag is selected.
-let Tlist_Enable_Fold_Column = 1 " Don't Show the fold indicator column in the taglist window.
-let Tlist_Show_Menu = 1 " Display the tags menu.
-let Tlist_Exit_OnlyWindow = 1 " Close Vim if the taglist is the only window.
-
-" TagListTagName  - Used for tag names
-highlight MyTagListTagName gui=bold guifg=Black guibg=Orange 
-" TagListTagScope - Used for tag scope
-highlight MyTagListTagScope gui=NONE guifg=Blue 
-" TagListTitle    - Used for tag titles
-highlight MyTagListTitle gui=bold guifg=DarkRed guibg=LightGray 
-" TagListComment  - Used for comments
-highlight MyTagListComment guifg=DarkGreen 
-" TagListFileName - Used for filenames
-highlight MyTagListFileName gui=bold guifg=Black guibg=LightBlue
-" Highlight of diff
-"highlight DiffAdd term=bold ctermbg=9 guibg=LightGreen
-"highlight DiffDelete term=bold ctermfg=9 ctermbg=11 gui=bold guifg=Red guibg=LightRed
-"highlight DiffChange term=bold ctermbg=13 guibg=LightBlue
-highlight DiffText term=reverse cterm=bold ctermbg=12 gui=bold guibg=Yellow
-
 
 " --------------------
 " EnhCommentify
 " --------------------
 " F11:  Insert/Remove C++ Comment ("//") before all the lines of the selection
 function EnhCommentifyCallback(ft)
-if a:ft == 'lingo'
-    let b:ECcommentOpen = '--'
-    let b:ECcommentClose = ''
-endif
-if a:ft == 'go'
-    let b:ECcommentOpen = '//'
-    let b:ECcommentClose = ''
-endif
+    if a:ft == 'lingo'
+        let b:ECcommentOpen = '--'
+        let b:ECcommentClose = ''
+    elseif a:ft == 'go'
+        let b:ECcommentOpen = '//'
+        let b:ECcommentClose = ''
+    elseif a:ft =~ '^\(hlsl\|swig\|c\|objc\)$' " NOTE: we have to rewrite the c comment behavior. 
+        let b:ECcommentOpen = '//'
+        let b:ECcommentClose = ''
+    elseif a:ft == 'snippet' " for snippet
+        let b:ECcommentOpen = '#'
+        let b:ECcommentClose = ''
+    elseif a:ft == 'maxscript' " for maxscript
+        let b:ECcommentOpen = '--'
+        let b:ECcommentClose = ''
+    endif
 endfunction
 let g:EnhCommentifyCallbackExists = 'Yes'
 let g:EnhCommentifyFirstLineMode='yes'
@@ -515,13 +507,18 @@ nnoremap <unique> <leader>lf :LUTags<CR>
 nnoremap <unique> <leader>lb :LUBufs<CR>
 nnoremap <unique> <silent> <Leader>lg :LUCurWord<CR>
 let g:LookupFile_TagExpr = ''
-let g:LookupFile_MinPatLength = 1
+let g:LookupFile_MinPatLength = 3
 let g:LookupFile_PreservePatternHistory = 0
 let g:LookupFile_PreserveLastPattern = 0
 let g:LookupFile_AllowNewFiles = 0
 let g:LookupFile_smartcase = 1
 let g:LookupFile_EscCancelsPopup = 1
 
+" ------------------------------------------------------------------ 
+" Desc: zencoding 
+" ------------------------------------------------------------------ 
+
+let g:user_zen_leader_key = '<c-z>'
 
 
 
@@ -549,3 +546,46 @@ let g:LookupFile_EscCancelsPopup = 1
 " 
 " Tom.
 " au GUIEnter * simalt ~x " Maximize window when enter vim
+
+
+" " --------------------
+" " Taglist
+" " --------------------
+" " F2:  Switch on/off TagList
+" nnoremap <silent> <F2> :Tlist<CR>
+" let Tlist_Use_Right_Window = 1
+" " to make Taglist work with UnrealScript
+" au FileType uc let Tlist_Ctags_Cmd = 'ctags.exe --options="' . $EX_DEV . '/vim/toolkit/cTags/.ctags"'
+" let tlist_uc_settings = 'uc;c:class;f:function;i:simulated;e:event;s:state;x:exec;v:var'
+
+" " ctags find the tags file from the current path instead of the path of
+" " currect file
+" au BufNewFile,BufEnter * set cpoptions+=d
+
+" let Tlist_Show_One_File = 1 " Displaying tags for only one file~
+" let Tlist_Sort_Type = "order" " sort by order or name
+" let Tlist_Display_Prototype = 0 " do not show prototypes and not tags in the taglist window.
+" let Tlist_Compart_Format = 1 " Remove extra information and blank lines from the taglist window.
+" let Tlist_GainFocus_On_ToggleOpen = 1 " Jump to taglist window on open.
+" let Tlist_Display_Tag_Scope = 1 " Show tag scope next to the tag name.
+" let Tlist_Close_On_Select = 1 " Close the taglist window when a file or tag is selected.
+" let Tlist_Enable_Fold_Column = 1 " Don't Show the fold indicator column in the taglist window.
+" let Tlist_Show_Menu = 1 " Display the tags menu.
+" let Tlist_Exit_OnlyWindow = 1 " Close Vim if the taglist is the only window.
+
+" " TagListTagName  - Used for tag names
+" highlight MyTagListTagName gui=bold guifg=Black guibg=Orange 
+" " TagListTagScope - Used for tag scope
+" highlight MyTagListTagScope gui=NONE guifg=Blue 
+" " TagListTitle    - Used for tag titles
+" highlight MyTagListTitle gui=bold guifg=DarkRed guibg=LightGray 
+" " TagListComment  - Used for comments
+" highlight MyTagListComment guifg=DarkGreen 
+" " TagListFileName - Used for filenames
+" highlight MyTagListFileName gui=bold guifg=Black guibg=LightBlue
+" " Highlight of diff
+" "highlight DiffAdd term=bold ctermbg=9 guibg=LightGreen
+" "highlight DiffDelete term=bold ctermfg=9 ctermbg=11 gui=bold guifg=Red guibg=LightRed
+" "highlight DiffChange term=bold ctermbg=13 guibg=LightBlue
+" highlight DiffText term=reverse cterm=bold ctermbg=12 gui=bold guibg=Yellow
+
