@@ -878,7 +878,7 @@ function! s:MapKeys()
     nnoremap <script> <silent> <buffer> p       :call <SID>JumpToTag(1)<CR>
     nnoremap <script> <silent> <buffer> <LeftRelease>
                 \ <LeftRelease>:call <SID>CheckMouseClick()<CR>
-    nnoremap <script> <silent> <buffer> <Space> :call <SID>ShowPrototype()<CR>
+    " nnoremap <script> <silent> <buffer> <Space> :call <SID>ShowPrototype()<CR>
 
     nnoremap <script> <silent> <buffer> +        :call <SID>OpenFold()<CR>
     nnoremap <script> <silent> <buffer> <kPlus>  :call <SID>OpenFold()<CR>
@@ -902,7 +902,8 @@ function! s:MapKeys()
                                         \ :call <SID>GotoNextToplevelTag(-1)<CR>
 
     nnoremap <script> <silent> <buffer> s    :call <SID>ToggleSort()<CR>
-    nnoremap <script> <silent> <buffer> x    :call <SID>ZoomWindow()<CR>
+    " nnoremap <script> <silent> <buffer> x    :call <SID>ZoomWindow()<CR>
+    nnoremap <script> <silent> <buffer> <Space> :call <SID>ZoomWindow()<CR>
     nnoremap <script> <silent> <buffer> q    :call <SID>CloseWindow()<CR>
     nnoremap <script> <silent> <buffer> <ESC>    :call <SID>CloseWindow()<CR>
     if exists('g:tagbar_closeWindowKey')
@@ -917,7 +918,8 @@ function! s:CreateAutocommands()
         autocmd!
         autocmd BufEnter   __Tagbar__ nested call s:QuitIfOnlyWindow()
         autocmd BufUnload  __Tagbar__ call s:CleanUp()
-        autocmd CursorHold __Tagbar__ call s:ShowPrototype()
+        " autocmd CursorHold __Tagbar__ call s:ShowPrototype()
+        autocmd CursorMoved __Tagbar__ call s:ShowPrototype()
 
         autocmd BufEnter,CursorHold * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'))
@@ -1402,6 +1404,10 @@ endfunction
 
 " s:OpenWindow() {{{2
 function! s:OpenWindow(autoclose)
+
+    " YJR: recode the current buffer
+    call exUtility#RecordCurrentBufNum()
+
     " If the tagbar window is already open jump to it
     let tagbarwinnr = bufwinnr('__Tagbar__')
     if tagbarwinnr != -1
@@ -1432,7 +1438,8 @@ function! s:OpenWindow(autoclose)
 
     call s:InitWindow(a:autoclose)
 
-    execute 'wincmd p'
+    " execute 'wincmd p'
+    call exUtility#GotoEditBuffer()
 
     " Jump back to the tagbar window if autoclose or autofocus is set. Can't
     " just stay in it since it wouldn't trigger the update event
@@ -1512,6 +1519,8 @@ function! s:CloseWindow()
             " Other windows are open, only close the tagbar one
             close
         endif
+        " YJR: goto the last ex EditBuffer
+        call exUtility#GotoEditBuffer()
     else
         " Go to the tagbar window, close it and then come back to the
         " original window
@@ -2217,7 +2226,7 @@ function! s:PrintHelp()
         silent  put ='\"'
         silent  put ='\" --------- General ---------'
         silent  put ='\" <Enter>   : Jump to tag definition'
-        silent  put ='\" <Space>   : Display tag prototype'
+        " silent  put ='\" <Space>   : Display tag prototype'
         silent  put ='\"'
         silent  put ='\" ---------- Folds ----------'
         silent  put ='\" +, zo     : Open fold'
@@ -2228,7 +2237,8 @@ function! s:PrintHelp()
         silent  put ='\"'
         silent  put ='\" ---------- Misc -----------'
         silent  put ='\" s          : Toggle sort'
-        silent  put ='\" x          : Zoom window in/out'
+        " silent  put ='\" x          : Zoom window in/out'
+        silent  put ='\" <Space>    : Zoom window in/out'
         silent  put ='\" q          : Close window'
         silent  put ='\" <F1>       : Remove help'
         silent  put _
