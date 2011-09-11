@@ -27,8 +27,8 @@ au BufNewFile,BufRead *.dox,*.doxygen setf cpp.doxygen
 " gmsh
 au BufNewFile,BufRead *.geo setf gmsh
 
-" as (actionscript/flash) I use java analyasis it
-au BufNewFile,BufRead *.as setf javascript
+" as for actionscript
+au BufNewFile,BufRead *.as setf actionscript
 
 " nsis
 au BufNewFile,BufRead *.nsh setf nsis
@@ -47,6 +47,9 @@ au BufNewFile,BufRead *.m call s:ex_FTm()
 
 " lua 
 au BufNewFile,BufRead *.wlua setf lua 
+
+" lingo
+au BufNewFile,BufRead *.ls setf lingo
 
 "/////////////////////////////////////////////////////////////////////////////
 " ex_FTm
