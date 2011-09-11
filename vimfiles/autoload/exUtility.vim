@@ -2406,7 +2406,9 @@ function exUtility#UpdateVimFiles( type ) " <<<
     " ======================================================== 
 
     if quick_gen_script != ''
-        silent exec "cscope kill " . g:exES_Cscope
+        if exists('g:exES_Cscope')
+            silent exec "cscope kill " . g:exES_Cscope
+        endif
         " we use async update
         " silent exec "cscope add " . g:exES_Cscope
     else
@@ -2420,7 +2422,9 @@ function exUtility#UpdateVimFiles( type ) " <<<
 
     let gen_type = ''
     if a:type == ""
-        silent exec "cscope kill " . g:exES_Cscope
+        if exists('g:exES_Cscope')
+            silent exec "cscope kill " . g:exES_Cscope
+        endif
         let gen_type = ' all'
         " we use async update
         " silent exec "cscope add " . g:exES_Cscope
