@@ -383,6 +383,8 @@ command -narg=? -complete=customlist,exUtility#CompleteBySymbolFile HL4 call exU
 command -narg=? -complete=customlist,exUtility#CompleteGMakeArgs GMake call exUtility#GCCMake('<args>')
 command -narg=? -complete=customlist,exUtility#CompleteGMakeArgs SMake call exUtility#ShaderMake('<args>')
 command -narg=* -complete=customlist,exUtility#CompleteVMakeArgs VMake call exUtility#VCMake('<args>')
+command -narg=* -complete=customlist,exUtility#CompleteByProjectFile JSLint call exUtility#JSLint('<args>')
+
 command -narg=* VBat call exUtility#VCMakeBAT(<f-args>)
 command -narg=? -complete=customlist,exUtility#CompleteUpdateArgs Update call exUtility#UpdateVimFiles('<args>')
 command -narg=? QCopy call exUtility#CopyQuickGenProject()

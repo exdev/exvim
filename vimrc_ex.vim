@@ -123,7 +123,7 @@ let g:ex_plugin_registered_filetypes = ["ex_plugin","ex_project","taglist","nerd
 
 let g:ex_update_prompt_behaviour = "silent"
 
-let g:ex_default_langs = ['c', 'cpp', 'c#', 'java', 'shader', 'python', 'vim', 'UnrealScript', 'math', 'wiki', 'ini', 'make', 'sh', 'batch', 'debug' ,'html', 'js'] 
+let g:ex_default_langs = ['c', 'cpp', 'c#', 'java', 'shader', 'python', 'vim', 'UnrealScript', 'math', 'wiki', 'ini', 'make', 'sh', 'batch', 'debug' ,'html', 'javascript'] 
 
 call add ( g:ex_default_langs, 'actionscript' ) 
 call exUtility#AddLangMap ( 'exvim', 'actionscript', ['as'] )

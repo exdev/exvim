@@ -2220,11 +2220,14 @@ function exUtility#Terminal( behavior, wait, cmd ) " <<<
         exec 'silent !' . wait_cmd . shell . ' ' . a:cmd . shell_end 
 
     elseif has("unix")
+        let wait_cmd = ''
         let silent_cmd = ''
         if a:behavior ==# 'silent'
             let silent_cmd = 'silent'
+        elseif a:behavior ==# 'prompt'
+            let wait_cmd = ';sh'
         endif
-        exec silent_cmd . ' !sh ' . a:cmd
+        exec silent_cmd . ' !' . a:cmd . wait_cmd
     endif
 endfunction " >>>
 
@@ -2278,6 +2281,52 @@ function exUtility#VCMake(args) " <<<
     else
         call exUtility#WarningMsg("entry file not found")
     endif
+endfunction " >>>
+
+" ------------------------------------------------------------------ 
+" Desc: JSLint
+" ------------------------------------------------------------------ 
+
+function exUtility#JSLint(args) " <<<
+
+    let isFile = 0
+
+    if filereadable(a:args)
+        let isFile = 1
+    else
+        if a:args == "clean"
+            call exUtility#Terminal ( 'silent', 'nowait', 'rm *.err')
+            return
+        endif
+    endif
+
+    " save all file for compile first
+    silent exec "wa!"
+
+    let error_file = 'error.err'
+    if isFile
+        call exUtility#Terminal ( 'silent', 'wait', 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jsl.conf" -process ' . a:args .' >' . error_file )
+    else
+        call exUtility#Terminal ( 'silent', 'wait', 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jslall.conf" >' . error_file )
+        call confirm( 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jslall.conf" >' . error_file )
+    endif
+    silent exec 'QF '. error_file
+
+endfunction " >>>
+
+" ------------------------------------------------------------------ 
+" Desc: 
+" ------------------------------------------------------------------ 
+
+function exUtility#CompleteJSLint( arg_lead, cmd_line, cursor_pos ) " <<<
+    let args = ["all","clean"]
+    let filter_result = []
+    for arg in args
+        if exUtility#SmartCaseCompare( arg, '^'.a:arg_lead.'.*' )
+            silent call add ( filter_result, arg )
+        endif
+    endfor
+    return filter_result
 endfunction " >>>
 
 " ------------------------------------------------------------------ 
@@ -2466,6 +2515,10 @@ function exUtility#UpdateVimFiles( type ) " <<<
     " ======================================================== 
     " prompt terminal, run the shell programme we gen.
     " ======================================================== 
+
+    if has ("unix")
+        let update_cmd = 'sh ' . update_cmd
+    endif
 
     call exUtility#Terminal ( 'prompt', 'nowait', update_cmd )
 endfunction " >>>
