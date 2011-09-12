@@ -2308,7 +2308,6 @@ function exUtility#JSLint(args) " <<<
         call exUtility#Terminal ( 'silent', 'wait', 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jsl.conf" -process ' . a:args .' >' . error_file )
     else
         call exUtility#Terminal ( 'silent', 'wait', 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jslall.conf" >' . error_file )
-        call confirm( 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jslall.conf" >' . error_file )
     endif
     silent exec 'QF '. error_file
 
