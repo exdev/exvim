@@ -17,7 +17,7 @@ if has ("unix")
 "     endif
 else " else if win32 or other system, just set the toolkit path.
     if !exists ( "g:ex_toolkit_path" )
-        let g:ex_toolkit_path = $EX_DEV.'/vim/ex/toolkit'
+        let g:ex_toolkit_path = $EX_DEV.'exVim/toolkit'
     endif
 endif
 

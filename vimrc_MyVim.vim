@@ -8,9 +8,22 @@ source $VIMRUNTIME/vimrc_example.vim
 behave xterm
 
 "" ==== Custom setting ====
+" setup back and swap directory
+let data_dir = $HOME.'/exVim/data/'
+let backup_dir = data_dir . 'backup'
+let swap_dir = data_dir . 'swap'
+if finddir(data_dir) == ''
+    silent call mkdir(data_dir)
+endif
+if finddir(backup_dir) == ''
+    silent call mkdir(backup_dir)
+endif
+if finddir(swap_dir) == ''
+    silent call mkdir(swap_dir)
+endif
 set backup                  " make backup file and leave it around 
-set backupdir=$HOME/exVim/data/backup " where to put backup file 
-set directory=$HOME/exVim/data/swap   " save the tmp files to temporary directory
+set backupdir=$HOME/exVim/data/backup " where to put backup file
+set directory=$HOME/exVim/data/swap " where to put swap file 
 set nocompatible            " Use Vim settings, rather then Vi settings (much better!). This must be first, because it changes other options as a side effect.
 set cindent shiftwidth=4    " Set cindent on to autoinent when editing C/C++ file, with 4 shift width
 set tabstop=4               " Set tabstop to 4 characters
