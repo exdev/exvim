@@ -380,6 +380,8 @@ function s:exQF_ChooseCompiler() " <<<
             endif
         elseif match(line, '^<<<<<< SWIG: ' ) != -1
             let s:exQF_compiler = 'swig'
+        elseif match(line, 'JavaScript Lint' ) != -1
+            let s:exQF_compiler = 'jslint'
         endif
     endfor
 
@@ -421,6 +423,8 @@ function s:exQF_ChooseCompiler() " <<<
         silent set errorformat+=%f:%l:%m
         silent set errorformat+=%f(%l\\,%c):\ %m " fxc shader error-format
         silent set errorformat+=%f:%l:\ %t:\ %m
+    elseif s:exQF_compiler == 'jslint'
+        silent set errorformat=%f(%l):\ %m
     endif
 
     "

@@ -13,6 +13,8 @@
 *.vimentry
 quick_gen_project_*_autogen.*
 vim73/
+data/backup/*
+data/swap/*
 
 #/////////////////////////////////////////////////////////////////////////////
 # gen by python

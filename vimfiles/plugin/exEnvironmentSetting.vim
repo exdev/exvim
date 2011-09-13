@@ -113,7 +113,10 @@ function s:exES_WriteDefaultTemplate() " <<<
     silent call add(_list, 'ID=./'._dir_name.'/ID')
     silent call add(_list, 'Symbol=./'._dir_name.'/symbol')
     silent call add(_list, 'Macro=./'._dir_name.'/macro')
-    silent call add(_list, 'Cscope=./'._dir_name.'/cscope.out')
+
+    if exists( 'g:exCS_enable' && g:exCS_enable )
+        silent call add(_list, 'Cscope=./'._dir_name.'/cscope.out')
+    endif
     silent call add(_list, 'Inherits=./'._dir_name.'/inherits')
     silent call add(_list, 'Bookmarks=./'._dir_name.'/bookmarks')
     silent call add(_list, '')
