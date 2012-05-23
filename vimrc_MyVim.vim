@@ -29,6 +29,7 @@ set cindent shiftwidth=4    " Set cindent on to autoinent when editing C/C++ fil
 set tabstop=4               " Set tabstop to 4 characters
 set expandtab               " Set expandtab on, the tab will be change to space automaticaly
 set nowrap                  " no wrap on the end of the editor screen.
+set nomore                  " no "-- more --" message displayed
 set viminfo+=!              " make sure it can save viminfo 
 set shellredir=>%s\ 2>&1    " redirection operator stderr to stdout
 set history=50              " keep 50 lines of command line history
@@ -79,7 +80,8 @@ if has("mac")               " Better font for coding
     let &guifont="Menlo Regular:h12" 
 else
     " if getfontname("Bitstream_Vera_Sans_Mono") != "" 
-        set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI
+        " set guifont=Lucida_Sans_Typewriter:h8:cANSI
+        set guifont=Bitstream_Vera_Sans_Mono:h08:cANSI
     " else
         " set guifont=Lucida_Console:h10:cANSI
     " endif

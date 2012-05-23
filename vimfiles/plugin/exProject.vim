@@ -967,7 +967,8 @@ function s:exPJ_GotoSelectResult(edit_cmd) " <<<
         call exUtility#Debug( full_path_name )
     else " default
         " put the edit file
-        echon full_path_name . "\r"
+        " TODO: YuJianrong: short the file message
+        " echon full_path_name . "\r"
         " silent wincmd p
         call exUtility#GotoEditBuffer()
         " do not open again if the current buf is the file to be opened

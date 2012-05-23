@@ -29,8 +29,9 @@ let s:ex_hlRegMap = ["","q","w","e","r"]
 " Desc: local script vairable initialization
 " ------------------------------------------------------------------ 
 
-let s:ex_editbuf_num = -1
+let s:ex_edit_winID = -1
 let s:ex_pluginbuf_num = -1
+let s:ex_last_winID = 0
 
 " ------------------------------------------------------------------ 
 " Desc: swap buf infos
@@ -164,6 +165,34 @@ let s:ex_MapHelpMode={}
 let s:ex_MapHelpOldMode={}
 let s:ex_MapLastCursorLine={}
 " } TODO end 
+
+
+"/////////////////////////////////////////////////////////////////////////////
+"  inner functions
+"/////////////////////////////////////////////////////////////////////////////
+
+function s:getNewWinID () 
+    let s:ex_last_winID = s:ex_last_winID + 1
+    return s:ex_last_winID
+endfunction
+
+function s:getWinnrFromWinID (winID)
+    let i = 1
+    let winNumber = winnr("$")
+    while i <= winNumber
+        if getwinvar(i, "ex_winID") == a:winID
+            return i
+        endif
+        let i = i + 1
+    endwhile
+    return -1
+endfunction
+
+function s:getBufnrFromWinID (winID)
+    return winbufnr(s:getWinnrFromWinID(winID))
+endfunction
+
+
 
 "/////////////////////////////////////////////////////////////////////////////
 "  window functions
@@ -1049,14 +1078,16 @@ endfunction " >>>
 
 " ------------------------------------------------------------------ 
 " Desc: Record current buf num when leave
-" FIXME: when you split window/open the same file in two window, you can only get the original bufwinnr() by the bufnr().
 " FIXME: :sp will trigger the WinEnter, find a way to use it.
 " ------------------------------------------------------------------ 
 
 function exUtility#RecordCurrentBufNum() " <<<
     let short_bufname = fnamemodify(bufname('%'),":p:t")
     if !exUtility#IsRegisteredPluginBuffer(bufname('%'))
-        let s:ex_editbuf_num = bufnr('%')
+        if getwinvar(0, "ex_winID") == ""
+            let w:ex_winID = s:getNewWinID()
+        endif
+        let s:ex_edit_winID = w:ex_winID
     elseif short_bufname !=# "-MiniBufExplorer-"
         let s:ex_pluginbuf_num = bufnr('%')
     endif
@@ -1156,7 +1187,7 @@ endfunction " >>>
 
 function exUtility#GotoEditBuffer() " <<<
     " check and jump to the buffer first
-    let winnum = bufwinnr(s:ex_editbuf_num)
+    let winnum = s:getWinnrFromWinID(s:ex_edit_winID)
     if winnr() != winnum && winnum != -1 " this will fix the jump error in the vimentry buffer, cause the winnum for vimentry buffer will be -1
         exe winnum . 'wincmd w'
     endif
@@ -1181,7 +1212,7 @@ endfunction " >>>
 " ------------------------------------------------------------------ 
 
 function exUtility#GetEditBufferNum() " <<<
-    return s:ex_editbuf_num
+    return s:getBufnrFromWinID(s:ex_edit_winID)
 endfunction " >>>
 
 " ------------------------------------------------------------------ 
@@ -1211,7 +1242,7 @@ function exUtility#SwitchBuffer() " <<<
     silent call exUtility#RecordCurrentBufNum()
 
     " if current window is same as edit buffer window, jump to last edit window
-    if winnr() == bufwinnr(s:ex_editbuf_num)
+    if s:ex_edit_winID == getwinvar(0, "ex_winID")
         call exUtility#GotoPluginBuffer()
     else
         call exUtility#GotoEditBuffer()
@@ -2306,6 +2337,8 @@ function exUtility#JSLint(args) " <<<
     let error_file = 'error.err'
     if isFile
         call exUtility#Terminal ( 'silent', 'wait', 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jsl.conf" -process ' . a:args .' >' . error_file )
+    elseif a:args == ""
+        call exUtility#Terminal ( 'silent', 'wait', 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jsl.conf" -process "' . expand("%") .'" >' . error_file )
     else
         call exUtility#Terminal ( 'silent', 'wait', 'jsl -nofilelisting -conf "' . expand(g:ex_toolkit_path) . '/jslint/jslall.conf" >' . error_file )
     endif

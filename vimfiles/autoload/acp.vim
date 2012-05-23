@@ -161,6 +161,12 @@ function acp#meetsForCssOmni(context)
   return 0
 endfunction
 
+" by Yu Jianrong
+function acp#meetsForJavascript(context)
+  return g:acp_behaviorJavascriptOmniLength >= 0 &&
+        \ a:context =~ '\k\{' . g:acp_behaviorJavascriptOmniLength . ',}$'
+endfunction
+
 "
 function acp#completeSnipmate(findstart, base)
   if a:findstart
