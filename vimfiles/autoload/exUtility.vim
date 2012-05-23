@@ -2255,7 +2255,7 @@ function exUtility#Terminal( behavior, wait, cmd ) " <<<
         let silent_cmd = ''
         if a:behavior ==# 'silent'
             let silent_cmd = 'silent'
-        elseif a:behavior ==# 'prompt'
+        elseif a:behavior ==# 'remain'
             let wait_cmd = ';sh'
         endif
         exec silent_cmd . ' !' . a:cmd . wait_cmd
