@@ -70,9 +70,8 @@ set diffopt=filler,context:9999 " do not hide the same lines
 set completeopt=menuone     " set completeopt don't show preview
 set tags+=./tags,./../tags,./**/tags,tags " which tags files CTRL-] will find 
 set makeef=error.err        " the errorfile for :make and :grep 
-set fileencodings=cp936,cp932,cp950,utf-8 "default for GB2312, sjis and BIG5
-set fileencodings=          
-set fileencoding=
+set fileencodings=ucs-bom,utf-8,cp936,cp932,cp950,latin1 "default for utf8, then GB2312, sjis and BIG5
+set encoding=utf-8          " utf-8 default
 if has("mac") && has("gui_running")
   set iminsert=2
 endif 
@@ -226,6 +225,9 @@ endfunction
 function LoopEncoding()
     if &encoding == 'utf-8' && &guifont !~ 'simsun'
         set encoding=cp950
+        set fileencodings=
+        set fileencoding=cp950
+        exe "e!"
         if getfontname("MingLiU") != ""
             set guifont=MingLiU:h10:cCHINESEBIG5
         else
@@ -233,6 +235,9 @@ function LoopEncoding()
         endif
     elseif &encoding == 'cp950'
         set encoding=cp932
+        set fileencodings=
+        set fileencoding=cp932
+        exe "e!"
         if getfontname("MS_Gothic") != ""
             set guifont=MS_Gothic:h10:cSHIFTJIS
         else
@@ -240,6 +245,9 @@ function LoopEncoding()
         endif
     elseif &encoding == 'cp932'
         set encoding=cp936
+        set fileencodings=
+        set fileencoding=cp936
+        exe "e!"
         if getfontname("NSimSun") != ""
             set guifont=NSimSun:h10:cGB2312
         else
@@ -247,6 +255,9 @@ function LoopEncoding()
         endif
     elseif &encoding == 'cp936'
         set encoding=utf-8
+        set fileencodings=
+        set fileencoding=utf
+        exe "e!"
         if getfontname("NSimSun") != ""
             set guifont=NSimSun:h10:cGB2312
         else
@@ -254,6 +265,9 @@ function LoopEncoding()
         endif
     else
         set encoding=utf-8
+        set fileencodings=
+        set fileencoding=utf-8
+        exe "e!"
         let &guifont=g:gui_font
     endif
 endfunction
