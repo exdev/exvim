@@ -1,3 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
-let g:netrw_dirhist_1='/private/var/folders/sc/994j2mmj0wg32fddqwdlqfh40000gn/T/vA0jayS'
