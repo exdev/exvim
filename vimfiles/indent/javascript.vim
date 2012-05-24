@@ -189,7 +189,8 @@ function! TrimLine(pline)
         let sub_line = matchstr(line, '^/\*.\{-}\*/', min_pos)
       else
         " /.../ sometimes is not a regexp, (a / b); // c
-        let m = matchlist(line, '^\(/[^/]\+/\)\([^/]\|$\)', min_pos)
+        " let m = matchlist(line, '^\(/[^/]\+/\)\([^/]\|$\)', min_pos)
+        let m = matchlist(line, '^\((/[^/]\+/)\)', min_pos)
         if len(m)
           let new_line .= '_'
           let sub_line = m[1]

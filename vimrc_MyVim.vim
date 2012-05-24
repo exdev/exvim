@@ -157,6 +157,7 @@ au FileType c,cpp,javascript set comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:
 au FileType cs set comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,f:///,f:// 
 au FileType vim set comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",f:\"
 au FileType lua set comments=f:--
+au FileType javascript,html set tabstop=2 shiftwidth=2
 
 
 ""--------------------------------------------------------------------------------
@@ -312,26 +313,26 @@ function Show_exVimEasyQuickReference()
     "     " show Chinese QuickReference
     "     echo " * <F1> : ex-plugins 窗口在线帮助\n"
     "     echo " * <leader><F1> : 显示 exVim Easy 快捷键快速参考\n"
-    "     echo " * <Alt-F1> : 清除查找寄存器 ('/' register) 以取消查找高亮\n"
-    "     echo " * <F2> : 开/关 tagBar 插件窗口\n"
-    "     echo " * <leader><F2> : 开/关 exMarksBrowser 插件窗口\n"
-    "     echo " * <F3> : 开/关 exBufExplorer 插件窗口\n"
-    "     echo " * <leader><F3> : 将当前文件加入到 exBufExplorer 的 Bookmark 中\n"
-    "     echo " * <Alt-F3> : 开/关 lookupfile 插件窗口\n"
-    "     echo " * <F4> : 开/关 exMacro\n"
-    "     echo " * <Alt-F4> : 我没有映射过这个快捷键，不过你仍然可以按了看看是什么功能 ;-p\n"
-    "     echo " * <F5> : 开/关 Project Window\n"
+    "     echo " * <Alt-F1> : 清除查找寄存�?('/' register) 以取消查找高亮\n"
+    "     echo " * <F2> : 开/�?tagBar 插件窗口\n"
+    "     echo " * <leader><F2> : 开/�?exMarksBrowser 插件窗口\n"
+    "     echo " * <F3> : 开/�?exBufExplorer 插件窗口\n"
+    "     echo " * <leader><F3> : 将当前文件加入到 exBufExplorer �?Bookmark 中\n"
+    "     echo " * <Alt-F3> : 开/�?lookupfile 插件窗口\n"
+    "     echo " * <F4> : 开/�?exMacro\n"
+    "     echo " * <Alt-F4> : 我没有映射过这个快捷键，不过你仍然可以按了看看是什么功�?;-p\n"
+    "     echo " * <F5> : 开/�?Project Window\n"
     "     echo " * <leader><F5> : 定位 Project Window 光标到编辑中的文件\n"
-    "     echo " * <F6> : 开/关 Symbol list window\n"
+    "     echo " * <F6> : 开/�?Symbol list window\n"
     "     echo " * <F7> : 以光标所在单词打开 Tag select window 以实现tag跳转\n"
-    "     echo " * <leader><F7> : 开/关 Tag select window\n"
+    "     echo " * <leader><F7> : 开/�?Tag select window\n"
     "     echo " * <F8> : 以光标所在单词打开 Global search window 以实现全局查找\n"
-    "     echo " * <leader><F8> : 开/关 Global search window\n"
-    "     echo " * <F9> : 开/关 Quick Fix window\n"
+    "     echo " * <leader><F8> : 开/�?Global search window\n"
+    "     echo " * <F9> : 开/�?Quick Fix window\n"
     "     echo " * <F11> : 注释/取消注释源代码（支持大部分语言）\n"
-    "     echo " * <leader><F11> : 可视模式 （Visual Mode）: 加入 cpp 块注释 ('/ /'); 普通模式（normal mode）: 删除 cpp 块注释\n"
-    "     echo " * <Alt-F11> : 可视模式 （Visual Mode）: 加入 #if 0/#endif ; 普通模式（normal mode）: 删除 #if 0/#endif\n"
-    "     echo " * <F12> : 显示/隐藏gvim的菜单和工具栏 \n"
+    "     echo " * <leader><F11> : 可视模式 （Visual Mode�? 加入 cpp 块注�?('/ /'); 普通模式（normal mode�? 删除 cpp 块注释\n"
+    "     echo " * <Alt-F11> : 可视模式 （Visual Mode�? 加入 #if 0/#endif ; 普通模式（normal mode�? 删除 #if 0/#endif\n"
+    "     echo " * <F12> : 显示/隐藏gvim的菜单和工具�?\n"
     "     echo " * <leader>ve : 转到.vimentry配置文件 \n"
     " else
         " show English QuickReference
