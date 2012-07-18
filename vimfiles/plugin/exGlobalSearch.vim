@@ -566,13 +566,22 @@ function s:exGS_GetGlobalSearchResult(search_pattern, search_method, direct_jump
     " create search cmd
     if s:exGS_ignore_case && (match(a:search_pattern, '\u') == -1)
         echomsg 'search ' . a:search_pattern . '...(ignore case)'
-        let search_cmd = 'lid --result=grep -i -f' . g:exES_ID . ' ' . a:search_method . ' ' . a:search_pattern
+        " let search_cmd = 'lid --result=grep -i -f' . g:exES_ID . ' ' . a:search_method . ' ' . a:search_pattern
+        let search_cmd = 'lid --key=none --separator=newline --result=filenames -i -f' . g:exES_ID . ' ' . a:search_method . ' ' . a:search_pattern
     else
         echomsg 'search ' . a:search_pattern . '...(no ignore case)'
-        let search_cmd = 'lid --result=grep -f' . g:exES_ID . ' ' . a:search_method . ' ' . a:search_pattern
+        " let search_cmd = 'lid --result=grep -f' . g:exES_ID . ' ' . a:search_method . ' ' . a:search_pattern
+        let search_cmd = 'lid --key=none --separator=newline --result=filenames -f' . g:exES_ID . ' ' . a:search_method . ' ' . a:search_pattern
     endif
-    let search_result = system(search_cmd)
-    let search_result = '----------' . a:search_pattern . '----------' . "\n" . search_result
+    let search_resultFiles = system(search_cmd)
+    let search_result = '----------' . a:search_pattern . '----------' . "\n" 
+    for filename in split(search_resultFiles, '\n')
+        if s:exGS_ignore_case && (match(a:search_pattern, '\u') == -1)
+            let search_result = search_result . system('grep -HnF ' . a:search_pattern . ' "' . filename . '"' )
+        else 
+            let search_result = search_result . system('grep -HnFi ' . a:search_pattern . ' "' . filename . '"' )
+        endif
+    endfor
 
     " push entry state after we get the search result
     let stack_info = {}
