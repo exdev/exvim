@@ -577,7 +577,7 @@ function s:exCS_GetSearchResult(search_pattern, search_method) " <<<
     catch /^Vim\%((\a\+)\)\=:E259/
         "call exUtility#WarningMsg("no matches found for " . a:search_pattern )
         echohl WarningMsg
-        echon "no matches found for " . a:search_pattern . "\r"
+        call exUtility#ShowMessage( "no matches found for " . a:search_pattern ) 
         echohl None
         return
     endtry

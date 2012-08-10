@@ -193,6 +193,23 @@ function s:getBufnrFromWinID (winID)
 endfunction
 
 
+"/////////////////////////////////////////////////////////////////////////////
+" Generic purpose functions
+"/////////////////////////////////////////////////////////////////////////////
+
+" ------------------------------------------------------------------ 
+" Desc: Show a message
+" message: a string, the message to be displayed
+" ------------------------------------------------------------------ 
+function exUtility#ShowMessage( message ) " <<<
+    " show progress
+    if len( a:message ) <= &columns-13
+        echon a:message . "\r"
+    else
+        let len = (&columns - 13 - 3) / 2
+        echon a:message[:len] . "..." . a:message[ (-len):] . "\r"
+    endif
+endfunction " >>>
 
 "/////////////////////////////////////////////////////////////////////////////
 "  window functions
@@ -1880,7 +1897,7 @@ endfunction " >>>
 
 function exUtility#Browse(dir, file_filter, dir_filter, filename_list ) " <<<
     " show progress
-    echon "processing: " . a:dir . "\r"
+    call exUtility#ShowMessage( "processing: " . a:dir ) 
 
     " get short_dir
     " let short_dir = strpart( a:dir, strridx(a:dir,'\')+1 )
@@ -2034,7 +2051,7 @@ function exUtility#QuickFileJump() " <<<
         " if we found the file
         if full_path_file != ""
             silent exec "e " . full_path_file 
-            echon full_path_file . "\r"
+            call exUtility#ShowMessage( full_path_file ) 
         else
             call exUtility#WarningMsg("file not found")
         endif
@@ -2675,7 +2692,7 @@ function exUtility#CopyQuickGenProject() " <<<
     else
         let cmd = copy_cmd . ' ' . '"'.full_quick_gen_script.'"' . ' ' . quick_gen_script 
         exec 'silent !' . cmd
-        echo 'file copied: ' . quick_gen_script
+        call exUtility#ShowMessage( 'file copied: ' . quick_gen_script ) 
     endif
 
     "
@@ -3496,7 +3513,7 @@ endfunction " >>>
 function exUtility#EditVimEntry() " <<<
     if exists( 'g:exES_VimEntryName' ) && exists( 'g:exES_CWD' ) && findfile ( g:exES_VimEntryName.'.vimentry', escape(g:exES_CWD,' \') ) != ""
         let vimentry_file = g:exES_VimEntryName . '.vimentry'
-        echon 'edit vimentry file: ' . vimentry_file . "\r"
+        call exUtility#ShowMessage( 'edit vimentry file: ' . vimentry_file ) 
         call exUtility#GotoEditBuffer ()
         silent exec 'e ' . g:exES_CWD . '/' . vimentry_file
     else
@@ -3745,13 +3762,13 @@ function exUtility#SaveAndConvertVimwiki( save_all ) " <<<
     " parsing wiki to html
     if a:save_all == 1
         silent exec 'wa' 
-        echo 'converting wikies to html...' 
+        call exUtility#ShowMessage( 'converting wikies to html...'  ) 
         exec 'VimwikiAll2HTML'
     else
         silent exec 'w'
-        echo "converting current buffer to html...\r"
+        call exUtility#ShowMessage( "converting current buffer to html..." ) 
         exec 'Vimwiki2HTML'
-        echon "Done!\r"
+        call exUtility#ShowMessage( "Done!" ) 
     endif
 
     " copy syntax highlighter js files
@@ -3815,7 +3832,7 @@ function exUtility#CopySyntaxHighlighterFiles( dest_path ) " <<<
             call exUtility#WarningMsg('Error: toolkit SyntaxHighligter not found, please install it.')
         else
             exec 'silent !' . cmd
-            echo 'syntax highligter files copied!'
+            call exUtility#ShowMessage( 'syntax highligter files copied!' ) 
         endif
     else
         call exUtility#WarningMsg ("Can't find path: " . full_path )

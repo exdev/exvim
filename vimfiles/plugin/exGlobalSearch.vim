@@ -384,7 +384,7 @@ function s:exGS_GlobalSubstitute( pat, sub, flag ) " <<<
             if cur_line !=# getline(".")
                 silent call setline( ".", cur_line )
             endif
-            echon cur_line . "\r"
+            call exUtility#ShowMessage( cur_line ) 
             call exUtility#GotoPluginBuffer()
         endif
         let cur_line_idx += 1
@@ -411,7 +411,7 @@ function s:exGS_ParseSubcmd(cmd) " <<<
         let flag = strpart( a:cmd, slash_idx_2+1 )
     endif
 
-    echon pat . ' ' . sub . ' ' . flag . "\r"
+    call exUtility#ShowMessage( pat . ' ' . sub . ' ' . flag ) 
     call s:exGS_GlobalSubstitute( pat, sub, flag )
 endfunction " >>>
 

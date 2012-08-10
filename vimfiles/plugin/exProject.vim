@@ -335,7 +335,7 @@ function s:exPJ_EchoPath () " <<<
 
     " echo the path name
     echohl Statement
-    echo full_path_name
+    call exUtility#ShowMessage( full_path_name ) 
     echohl None
 endfunction " >>>
 
@@ -502,7 +502,7 @@ function s:exPJ_CreateProject(with_dialog) " <<<
         endif
     endif
 
-    echon "Creating exProject: " . entry_dir . "\r"
+    call exUtility#ShowMessage( "Creating exProject: " . entry_dir ) 
     call s:exPJ_OpenProject('')
     silent exec '1,$d _'
 
@@ -516,9 +516,9 @@ function s:exPJ_CreateProject(with_dialog) " <<<
 
     " save filenametag list
     if exists( 'g:exES_LookupFileTag' )
-        echon "sorting filenametags... \r"
+        call exUtility#ShowMessage( "sorting filenametags... " ) 
         silent call writefile( sort(filename_list), simplify(g:exES_CWD.'/'.g:exES_LookupFileTag))
-        echon "save as " . g:exES_LookupFileTag . " \r"
+        call exUtility#ShowMessage( "save as " . g:exES_LookupFileTag ) 
     endif
 
     " KEEPME: we don't use this method now { 
@@ -543,7 +543,7 @@ function s:exPJ_CreateProject(with_dialog) " <<<
     silent put! = 'file filter = ' . project_file_filter
     silent normal! 3j
 
-    echon "Creating exProject: " . entry_dir . " done!\r"
+    call exUtility#ShowMessage( "Creating exProject: " . entry_dir . " done!" ) 
 endfunction " >>>
 
 " ------------------------------------------------------------------ 
@@ -628,7 +628,7 @@ function s:exPJ_QuickRefreshProject() " <<<
     " do not escape, or the directory with white-space can't be found
     "let full_path_name = escape(simplify(full_path_name),' ')
     let full_path_name = strpart( full_path_name, 0, strlen(full_path_name)-1 )
-    echon "Update directory: " . full_path_name . "\r"
+    call exUtility#ShowMessage( "Update directory: " . full_path_name ) 
 
     " select it first to record in '<,'>
     silent exec 'normal! $vaB[{v'
@@ -751,7 +751,7 @@ function s:exPJ_RefreshProject( with_dialog ) " <<<
     " do not escape, or the directory with white-space can't be found
     "let full_path_name = escape(simplify(full_path_name),' ')
     let full_path_name = strpart( full_path_name, 0, strlen(full_path_name)-1 )
-    echon "Update directory: " . full_path_name . "\r"
+    call exUtility#ShowMessage( "Update directory: " . full_path_name ) 
 
     " set level list if not the root dir
     if is_root_dir == 0
@@ -771,7 +771,7 @@ function s:exPJ_RefreshProject( with_dialog ) " <<<
     " reset level list
     call exUtility#SetLevelList(-1, 1)
 
-    echon "Update directory: " . full_path_name . " done!\r"
+    call exUtility#ShowMessage( "Update directory: " . full_path_name . " done!" ) 
 
     " at the end, we need to rename the folder as simple one
     " rename the folder
@@ -946,13 +946,13 @@ function s:exPJ_GotoSelectResult(edit_cmd) " <<<
     " let file_type = strpart( full_path_name, strridx(full_path_name,'.')+1 )
     let file_type = fnamemodify( full_path_name, ":e" )
     if file_type == 'err'
-        echon 'load quick fix list: ' . full_path_name . "\r"
+        call exUtility#ShowMessage( 'load quick fix list: ' . full_path_name ) 
         call exUtility#GotoPluginBuffer()
         silent exec 'QF '.full_path_name
         " NOTE: when open error by QF, we don't want to exec exUtility#OperateWindow below ( we want keep stay in the exQF plugin ), so return directly 
         return 
     elseif file_type == 'mk'
-        echon 'set make file: ' . full_path_name . "\r"
+        call exUtility#ShowMessage( 'set make file: ' . full_path_name ) 
         call exUtility#GotoEditBuffer()
         silent exec a:edit_cmd.' '.full_path_name
         """"""""""""""""""""""""""""""""""""""
@@ -962,7 +962,7 @@ function s:exPJ_GotoSelectResult(edit_cmd) " <<<
         " silent! setlocal nobuflisted
         """"""""""""""""""""""""""""""""""""""
     elseif file_type == 'exe'
-        echon 'debug: ' . full_path_name . "\r"
+        call exUtility#ShowMessage( 'debug: ' . full_path_name ) 
         call exUtility#GotoEditBuffer()
         call exUtility#Debug( full_path_name )
     else " default
@@ -1021,7 +1021,7 @@ function s:exPJ_GotoCurrentFile( jump_to_project_window ) " <<<
 
                 "
                 let is_found = 1
-                echon "file found in: " . cur_filefullpath . "\r"
+                call exUtility#ShowMessage( "file found in: " . cur_filefullpath ) 
                 break
             endif
         else " if file not found
