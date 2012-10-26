@@ -438,6 +438,9 @@ function EnhCommentifyCallback(ft)
     elseif a:ft == 'maxscript' " for maxscript
         let b:ECcommentOpen = '--'
         let b:ECcommentClose = ''
+    elseif a:ft == 'typescript'
+        let b:ECcommentOpen = '//'
+        let b:ECcommentClose = ''
     endif
 endfunction
 let g:EnhCommentifyCallbackExists = 'Yes'

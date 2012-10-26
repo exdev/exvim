@@ -385,6 +385,7 @@ command -narg=? -complete=customlist,exUtility#CompleteGMakeArgs SMake call exUt
 command -narg=* -complete=customlist,exUtility#CompleteVMakeArgs VMake call exUtility#VCMake('<args>')
 " command -narg=* -complete=customlist,exUtility#CompleteByProjectFile JSLint call exUtility#JSLint('<args>')
 command -narg=* -complete=customlist,exUtility#CompleteJSLint JSLint call exUtility#JSLint('<args>')
+command -narg=* TSC call exUtility#TSC('<args>')
 
 command -narg=* VBat call exUtility#VCMakeBAT(<f-args>)
 command -narg=? -complete=customlist,exUtility#CompleteUpdateArgs Update call exUtility#UpdateVimFiles('<args>')

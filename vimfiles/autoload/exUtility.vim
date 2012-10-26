@@ -2364,6 +2364,21 @@ function exUtility#JSLint(args) " <<<
 endfunction " >>>
 
 " ------------------------------------------------------------------ 
+" Desc: TSC
+" ------------------------------------------------------------------ 
+
+function exUtility#TSC(args) " <<<
+
+    " save file for compile first
+    silent exec "wa"
+
+    let error_file = 'error.err'
+    call exUtility#Terminal ( 'silent', 'wait', 'tsc -c "' . expand("%") .'" 2>' . error_file )
+    silent exec 'QF '. error_file
+
+endfunction " >>>
+
+" ------------------------------------------------------------------ 
 " Desc: 
 " ------------------------------------------------------------------ 
 
