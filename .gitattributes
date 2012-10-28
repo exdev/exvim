@@ -48,4 +48,4 @@
 *.dbproj text=auto merge=union 
 *.sln text=auto eol=crlf merge=union 
 
-*.vim text=auto
+*.vim text
