@@ -364,7 +364,7 @@ endfunction " >>>
 
 function s:exQF_ChooseCompiler() " <<<
     " choose compiler
-    let s:exQF_compiler = 'gcc'
+    let s:exQF_compiler = ''
     let multi_core = 0
     for line in getline( 1, 4 ) " actual we just need to check line 1-2, but give a protected buffer check to 4 in case. 
         " process gcc error log formation
@@ -419,14 +419,15 @@ function s:exQF_ChooseCompiler() " <<<
     elseif s:exQF_compiler == 'swig'
         silent set errorformat=%f(%l):\ %m
     elseif s:exQF_compiler == 'gcc'
-        " this is for exGlobaSearch result, some one may copy the global search result to exQuickFix
         silent set errorformat+=%f:%l:%m
         silent set errorformat+=%f(%l\\,%c):\ %m " fxc shader error-format
         silent set errorformat+=%f:%l:\ %t:\ %m
     elseif s:exQF_compiler == 'jslint'
         silent set errorformat=%f(%l):\ %m
     else " any other format
-        silent set errorformat=%f(%l):\ %m
+        silent set errorformat=%f\ (%l\\,%c):\ %m
+        silent set errorformat+=%f\(%l\\,%c):\ %m
+        silent set errorformat+=%f\(%l):\ %m
     endif
 
     "

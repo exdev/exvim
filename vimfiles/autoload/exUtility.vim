@@ -2373,7 +2373,7 @@ function exUtility#TSC(args) " <<<
     silent exec "wa"
 
     let error_file = 'error.err'
-    call exUtility#Terminal ( 'silent', 'wait', 'tsc -c "' . expand("%") .'" 2>' . error_file )
+    call exUtility#Terminal ( 'silent', 'wait', 'tsc --out out.err "' . expand("%") .'" 2>' . error_file )
     silent exec 'QF '. error_file
 
 endfunction " >>>

@@ -156,7 +156,7 @@ au FileType c,cpp,javascript set comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:
 au FileType cs set comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,f:///,f:// 
 au FileType vim set comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",f:\"
 au FileType lua set comments=f:--
-au FileType javascript,html set tabstop=2 shiftwidth=2
+au FileType javascript,html,typescript set tabstop=2 shiftwidth=2
 
 
 ""--------------------------------------------------------------------------------
