@@ -333,6 +333,7 @@ function exUtility#InitWindow(init_func_name) " <<<
     " Define the ex autocommands
     augroup ex_auto_cmds
         autocmd WinLeave * call exUtility#RecordCurrentBufNum()
+        autocmd WinEnter * call exUtility#CheckCurrentBufNum()
         autocmd BufLeave * call exUtility#RecordSwapBufInfo()
     augroup end
 
@@ -1107,6 +1108,18 @@ function exUtility#RecordCurrentBufNum() " <<<
         let s:ex_edit_winID = w:ex_winID
     elseif short_bufname !=# "-MiniBufExplorer-"
         let s:ex_pluginbuf_num = bufnr('%')
+    endif
+endfunction " >>>
+
+" ------------------------------------------------------------------ 
+" Desc: Check if the window is an edit window, set ex_winID if it is
+" ------------------------------------------------------------------ 
+function exUtility#CheckCurrentBufNum() " <<<
+    if !exUtility#IsRegisteredPluginBuffer(bufname('%'))
+        if getwinvar(0, "ex_winID") == ""
+            let w:ex_winID = s:getNewWinID()
+        endif
+        let s:ex_edit_winID = w:ex_winID
     endif
 endfunction " >>>
 
