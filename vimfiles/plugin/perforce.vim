@@ -86,6 +86,10 @@ augroup END
 " Initialize variables
 "----------------------------------------------------------------------------
 function s:P4InitialBufferVariables()
+
+    if exists( "b:headrev" ) 
+        return
+    endif
     let b:headrev=""
     let b:depotfile=""
     let b:haverev=""
@@ -128,12 +132,30 @@ function s:P4ShellCommandCurrentBuffer( sCmd )
                 return s:P4ShellCommand( a:sCmd . " " . filename )
 endfunction
 
+function s:P4ShellCommandAndEditCurrentBufferAsync( sCmd )
+		 call s:P4ShellCommandCurrentBufferAsync( a:sCmd )
+		 e!
+endfunction
+
+"----------------------------------------------------------------------------
+" A wrapper around a p4 command line for async run on current buffer
+"----------------------------------------------------------------------------
+function s:P4ShellCommandCurrentBufferAsync( sCmd )
+                let filename = expand( "%:p" )
+                return s:P4ShellCommandAsync( a:sCmd . " " . filename )
+endfunction
+
 "----------------------------------------------------------------------------
 " A wrapper around a p4 command line
 "----------------------------------------------------------------------------
-function s:P4ShellCommand( sCmd )
+function s:P4ShellCommandBase( sCmd, async)
     let sReturn = ""
-    let sCommandLine = s:PerforceExecutable . " " . a:sCmd
+    if a:async
+        " TODO: add code for non-windows
+        let sCommandLine = "cmd /c start " . s:PerforceExecutable . " " . a:sCmd
+    else
+        let sCommandLine = s:PerforceExecutable . " " . a:sCmd
+    endif
     let v:errmsg = ""
     let sReturn = system( sCommandLine )
     if v:errmsg == ""
@@ -145,6 +167,19 @@ function s:P4ShellCommand( sCmd )
             return sReturn
         endif
     endif
+endfunction
+
+"----------------------------------------------------------------------------
+" A wrapper around a p4 command line
+"----------------------------------------------------------------------------
+function s:P4ShellCommand( sCmd )
+    return s:P4ShellCommandBase( a:sCmd, 0)
+endfunction
+"----------------------------------------------------------------------------
+" A wrapper around a p4 command line
+"----------------------------------------------------------------------------
+function s:P4ShellCommandAsync( sCmd )
+    return s:P4ShellCommandBase( a:sCmd, 1)
 endfunction
 
 "----------------------------------------------------------------------------
@@ -180,7 +215,7 @@ endfunction
 " Diff a file, with more checking than just wrapping the command
 "----------------------------------------------------------------------------
 function s:P4DiffFile()
-    let diff = s:P4ShellCommandCurrentBuffer( "diff -db" )
+    let diff = s:P4ShellCommandCurrentBufferAsync( "diff -db" )
     return diff
 endfunction
 
@@ -188,7 +223,7 @@ endfunction
 " Unified diff a file, with more checking than just wrapping the command
 "----------------------------------------------------------------------------
 function s:P4UDiffFile()
-    let diff = s:P4ShellCommandCurrentBuffer( "diff -du -db" )
+    let diff = s:P4ShellCommandCurrentBufferAsync( "diff -du -db" )
     return diff
 endfunction
 
@@ -405,7 +440,7 @@ function P4RulerStatus()
     endif
     if b:action == ""
         if b:headrev == ""
-            return "[Not in p4]" 
+            return "[p4 unsync]" 
         elseif b:otheropen == ""
             return "[p4 unopened]"
         else
@@ -443,6 +478,8 @@ function s:P4GetFileStatus()
 
     let b:otheraction = matchstr( filestatus, "otherAction0 [a-zA-Z]*\\C" )
     let b:otheraction = strpart( b:otheraction, 13 )
+
+    set rulerformat=%60(%=%{P4RulerStatus()}\ %4l,%-3c\ %3p%%%)
 
     if b:headrev == ""
         return "Not in p4"
@@ -763,7 +800,7 @@ function s:P4Help()
     \ "x - Mark file to changelist for deletion\n" .
     \ "r - Revert file\n" .
     \ "i - Get file info\n" .
-    \ "s - Get file info\n" .
+    \ "s - Submit\n" .
     \ "v - Show versions\n" .
     \ "d - Diff file\n" .
     \ "u - Unified diff file\n" .
